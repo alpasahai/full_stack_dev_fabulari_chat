@@ -106,13 +106,169 @@ Commits follow a structure to ensure it's identifiable what Phase it belongs to 
 | FR-46 | Prototype supports a minimum of 10 concurrent users | System | Could | Unlimited users per room otherwise |
 
 ## Data Structures used in Fabulari: 
-Y 
+The following tables showcase the data structures that will be used for the Fabuari application: 
+### User
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `username` | String | Display name / login handle |
+| `email` | String | Contact email, used at signup |
+| `password_hash` | String | Hashed password (never stored plaintext) |
+| `dob` | Date | Used to enforce age limits on group joining |
+| `pfp_url` | String | Path/URL to uploaded profile picture |
+| `theme` | String (enum: `light`, `dark`, `colour`) | User's selected UI theme |
+| `system_role` | String (enum: `standard`, `super_admin`) | Global permission level |
+| `favourite_groups` | Array<ObjectId> | Groups starred by the user |
+| `is_banned` | Boolean | System-level ban flag (Super Admin action) |
+| `banned_from_groups` | Array<ObjectId> | Group-level bans (separate from system ban) |
+
+### Group
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `name` | String | Group display name |
+| `description` | String | Shown on group creation/manage modal |
+| `age_limit` | Number | Minimum age to join, set at creation |
+| `theme` | String | Group's visual theme |
+| `admin_ids` | Array<ObjectId> | Users with Group Admin permissions for this group |
+| `member_ids` | Array<ObjectId> | All members of the group |
+| `room_ids` | Array<ObjectId> | Rooms belonging to this group |
+| `status` | String (enum: `pending`, `approved`, `rejected`) | Super Admin approval state |
+| `rejection_reason` | String | Populated if `status` is `rejected` |
+
+### Room
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `group_id` | ObjectId | Parent group reference |
+| `name` | String | Room name, set on creation |
+
+### Message
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `room_id` | ObjectId | Room the message belongs to |
+| `sender_id` | ObjectId | Reference to sending User |
+| `text` | String | Message content |
+| `time_stamp` | Date | Sent time, shown in chat window |
+
+### GroupCreationRequest
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `requested_by` | ObjectId | User who submitted the request |
+| `group_name` | String | Proposed group name |
+| `description` | String | Proposed description |
+| `age_limit` | Number | Proposed age limit |
+| `status` | String (enum: `pending`, `approved`, `rejected`) | Super Admin decision |
+| `rejection_reason` | String | Shown to requester if rejected |
+
+### JoinRequest
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `group_id` | ObjectId | Group being requested to join |
+| `user_id` | ObjectId | Requesting user |
+| `status` | String (enum: `pending`, `approved`, `rejected`) | Group Admin decision |
+
+### ReportRequest (Ban/Removal)
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `reporter_id` | ObjectId | User who filed the report |
+| `target_user_id` | ObjectId | User being reported |
+| `group_id` | ObjectId or null | Group context, if group-level (null = system-level report) |
+| `reason` | String | Reason provided in report modal |
+| `status` | String (enum: `pending`, `approved`, `denied`) | Super Admin decision |
+
+### AuditLogEntry
+| Field | Type | Description |
+|-------|------|--------------|
+| `id` | ObjectId | Unique identifier |
+| `action` | String | e.g. `group_approved`, `user_banned`, `group_rejected` |
+| `performed_by` | ObjectId | Super Admin who took the action |
+| `target_id` | ObjectId | Affected user/group |
+| `time_stamp` | Date | When the action occurred |
 
 ## Angular Architecture: 
-Y 
+For the angualar architecture of Fabulari, it has been structured to better suit the application to work with different workflows within the application e.g. User vs Group Admin vs Super Admin. 
+
+### Routing
+- `/` — Opening screen
+- `/login` — Login screen
+- `/signup` — Sign up screen
+- `/app/main` — Main page (My Groups + Join Groups)
+- `/app/profile` — Profile screen
+- `/app/group/:groupId` — Group page (rooms + chat + members)
+- `/app/group/:groupId/requests` — Group Admin join-request queue (route-guarded, Group Admin only)
+- `/superadmin/requests` — Super Admin request queue + audit log
+
+The `/superadmin` route is deliberately isolated as its own lazy-loaded module with no shared layout with `/app`, reflecting that the Super Admin workflow never overlaps with User/Group Admin navigation.
+
+### Components
+| Component | Role |
+|-----------|------|
+| `OpeningScreenComponent` | Landing screen, links to login/signup |
+| `LoginComponent` | Username/password auth form |
+| `SignupComponent` | Registration form incl. DOB check, pfp upload, theme selection |
+| `MainPageComponent` | Hosts My Groups + Join Groups sections |
+| `MyGroupsListComponent` | Displays favourites, admin groups, full group list |
+| `JoinGroupsComponent` | Browse groups, view own join requests + status |
+| `ProfileComponent` | View/edit profile, delete account |
+| `GroupPageComponent` | Container for rooms sidebar, chat window, members sidebar |
+| `RoomsSidebarComponent` | Lists rooms, create/manage room actions |
+| `ChatWindowComponent` | Displays messages for active room, message input |
+| `MembersSidebarComponent` | Lists group members, edit/report actions |
+| `GroupAdminRequestsComponent` | Group Admin's join-request approval queue |
+| `SuperAdminRequestsComponent` | Super Admin's group-creation + ban/removal queues |
+| `AuditLogComponent` | Read-only log of Super Admin actions |
+| `GroupCreationModalComponent` | Modal for submitting a new group request |
+| `ManageGroupModalComponent` | Edit/delete group (Group Admin) |
+| `NewRoomModalComponent` | Create a new room within a group |
+| `ReportModalComponent` | Submit a report/ban request on a member |
+| `MessageModalComponent` | Generic confirmation/rejection message popup |
+
+### Services
+| Service | Role |
+|---------|------|
+| `AuthService` | Login/logout/signup, stores current user, exposes permission checks |
+| `SocketService` | Wraps Socket.IO client for real-time messaging |
+| `GroupService` | CRUD + favourite/join calls for groups |
+| `RoomService` | CRUD calls for rooms |
+| `RequestService` | Handles group creation, join, and report requests |
+| `UserService` | Profile fetch/update/delete |
+| `AuditLogService` | Fetches Super Admin audit log entries |
+
+### Models
+`User`, `Group`, `Room`, `Message`, `GroupCreationRequest`, `JoinRequest`, `ReportRequest`, `AuditLogEntry` — TypeScript interfaces mirroring the backend schemas above.
 
 ## Proposed Server Endpoints: 
-Y 
+| Method | Route | Params/Body | Returns | Description |
+|--------|-------|-------------|---------|--------------|
+| POST | `/api/auth/signup` | `{ username, email, password, dob, theme }` | `{ user }` | Registers a new user |
+| POST | `/api/auth/login` | `{ username, password }` | `{ token, user }` | Authenticates user |
+| GET | `/api/users/:id` | — | `{ user }` | Fetch profile |
+| PATCH | `/api/users/:id` | `{ username?, email?, password?, pfpUrl?, theme? }` | `{ user }` | Edit profile |
+| DELETE | `/api/users/:id` | — | `204` | Delete account |
+| GET | `/api/groups` | — | `Group[]` | Browse all approved groups |
+| GET | `/api/groups/mine` | — | `{ favourites, adminOf, memberOf }` | My Groups data |
+| POST | `/api/groups` | `{ name, description, ageLimit, theme }` | `{ groupCreationRequest }` | Submit group creation (pending SA approval) |
+| PATCH | `/api/groups/:id` | `{ name?, description?, ageLimit?, theme? }` | `{ group }` | Edit group (Group Admin) |
+| DELETE | `/api/groups/:id` | — | `204` | Delete group (Group Admin) |
+| POST | `/api/groups/:id/favourite` | — | `{ favourited: boolean }` | Toggle favourite |
+| POST | `/api/groups/:id/join` | — | `{ joinRequest }` | Request to join a group |
+| GET | `/api/groups/:id/join-requests` | — (Group Admin) | `JoinRequest[]` | View pending join requests |
+| PATCH | `/api/groups/:id/join-requests/:reqId` | `{ status }` | `{ joinRequest }` | Approve/deny join request |
+| POST | `/api/groups/:id/rooms` | `{ name }` | `{ room }` | Create room |
+| PATCH | `/api/groups/:id/rooms/:roomId` | `{ name }` | `{ room }` | Edit room |
+| DELETE | `/api/groups/:id/rooms/:roomId` | — | `204` | Delete room |
+| GET | `/api/groups/:id/rooms/:roomId/messages` | — | `Message[]` | Fetch message history |
+| POST | `/api/reports` | `{ targetUserId, groupId?, reason }` | `{ reportRequest }` | Submit a report/ban request |
+| GET | `/api/superadmin/group-requests` | — (Super Admin) | `GroupCreationRequest[]` | Pending group creation requests |
+| PATCH | `/api/superadmin/group-requests/:id` | `{ status, rejectionReason? }` | `{ request }` | Approve/deny group creation |
+| GET | `/api/superadmin/reports` | — (Super Admin) | `ReportRequest[]` | Pending ban/removal requests |
+| PATCH | `/api/superadmin/reports/:id` | `{ status }` | `{ request }` | Approve/deny report |
+| GET | `/api/superadmin/audit-log` | — (Super Admin) | `AuditLogEntry[]` | Full audit log |
 
 ## Design Documents and Storyboard: 
 The wireframes and storyboards for Fabulari are located in the `/design_documents/` folder of this repository, covering the following:
