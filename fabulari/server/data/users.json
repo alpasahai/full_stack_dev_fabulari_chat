@@ -1,0 +1,23 @@
+[
+  {
+    "id": "u1",
+    "username": "alpa",
+    "password": "password123",
+    "role": "superAdmin",
+    "groupIds": []
+  },
+  {
+    "id": "u2",
+    "username": "tyra",
+    "password": "password123",
+    "role": "groupAdmin",
+    "groupIds": ["g1"]
+  },
+  {
+    "id": "u3",
+    "username": "ysa",
+    "password": "password123",
+    "role": "user",
+    "groupIds": ["g1"]
+  }
+]
