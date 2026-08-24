@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { readData } = require('../utilities/json_db');
+const { read_data } = require('../utilities/json_db');
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
