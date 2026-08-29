@@ -18,6 +18,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: Dashboard },
+      //{ path: 'profile', component: ProfileComponent },   
+      //{ path: 'group/:id', component: GroupPageComponent },
     ]
   },
 
