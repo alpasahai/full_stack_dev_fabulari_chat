@@ -1,1 +1,10 @@
-[]
+[
+    {
+    "id": "g1",
+    "name": "alpie-cats",
+    "adminId": "u2",
+    "memberIds": ["u2", "u3"],
+    "channelIds": [],
+    "status": "approved"
+  }
+]
