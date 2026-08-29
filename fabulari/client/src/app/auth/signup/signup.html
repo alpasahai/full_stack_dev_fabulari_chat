@@ -2,7 +2,7 @@
   <div class="signup-card">
     <h1>SIGN UP</h1>
 
-    <form (ngSubmit)="onSubmit()">
+    <form #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
       <label>
         Username
         <input type="text" [(ngModel)]="username" name="username" required>
@@ -39,7 +39,7 @@
 
       <p class="error" *ngIf="error_message">{{ error_message }}</p>
 
-      <button type="submit">Sign Up</button>
+      <button type="submit" [disabled]="signupForm.invalid">Sign Up</button>
     </form>
 
     <a routerLink="/login" class="back-link">Been here before? Login!</a>

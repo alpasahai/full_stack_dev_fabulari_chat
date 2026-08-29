@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../core/services/user';
 
@@ -21,7 +21,13 @@ export class Signup {
   constructor(private userService: UserService, private router: Router) {}
 
   //Creating a user through the signup fields
-  onSubmit() {
+  onSubmit(form: NgForm) {
+    //Error checking:
+    if(form.invalid) {
+      alert("Please fill in the required fields...");
+      return;
+    }
+
     this.userService.createUser({
       username: this.username,
       email: this.email,

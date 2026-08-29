@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../core/services/auth';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common'; //For Error messages
@@ -19,7 +19,13 @@ export class Login {
   constructor(private auth: AuthService, private router: Router) {}
 
   //Event Handler for the login form submission
-  onSubmit() {
+  onSubmit(form: NgForm) {
+    //Error checking:
+    if(form.invalid) {
+      alert("Please fill in the required fields...");
+      return;
+    }
+
     this.auth.login(this.username, this.password).subscribe({
       next: (user) => {
         this.auth.saveSession(user);
