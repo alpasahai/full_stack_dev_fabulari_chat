@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common'; //For Error messages
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
-  templateUrl: './login.component.html',
+  imports: [FormsModule, CommonModule, RouterLink],
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
 export class Login {
   username = '';
@@ -22,7 +24,7 @@ export class Login {
       next: (user) => {
         this.auth.saveSession(user);
         if (user.role === 'super_admin') {
-          this.router.navigate(['/superadmin/users']);
+          this.router.navigate(['/superadmin/requests']);
         } else {
           this.router.navigate(['/app/dashboard']);
         }
