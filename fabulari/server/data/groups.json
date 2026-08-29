@@ -9,5 +9,16 @@
     ],
     "channelIds": [],
     "status": "approved"
+  },
+    {
+    "id": "g2",
+    "name": "alpie-hates-geec",
+    "adminId": "u2",
+    "memberIds": [
+      "u2",
+      "u3"
+    ],
+    "channelIds": [],
+    "status": "approved"
   }
 ]

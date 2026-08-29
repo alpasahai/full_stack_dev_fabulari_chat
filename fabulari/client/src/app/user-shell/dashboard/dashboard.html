@@ -1,3 +1,5 @@
+<!--<p>DEBUG length: {{ myGroups.length }}</p>-->
+
 <div class="main-page">
   <header>
     <h1>MAIN PAGE</h1>
@@ -12,10 +14,16 @@
       <h2>My Groups</h2>
       <div class="group-list">
         <div class="group-item" *ngFor="let g of myGroups" (click)="openGroup(g)">
+            {{ g.name }}
+        </div>
+        <p class="empty" *ngIf="!myGroups.length">You're not in any groups yet.</p>
+    </div>
+      <!-- <div class="group-list">
+        <div class="group-item" *ngFor="let g of myGroups" (click)="openGroup(g)">
           {{ g.name }}
         </div>
         <p class="empty" *ngIf="!myGroups.length">You're not in any groups yet.</p>
-      </div>
+      </div> -->
     </section>
 
     <section class="join-groups">
