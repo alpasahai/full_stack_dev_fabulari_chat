@@ -9,7 +9,7 @@ export const superAdminGuard: CanActivateFn = () => {
 
   //If user == super_admin, then allow access to the route, otherwise redirect to login page
   //Remembering the super_admin has it's own shell
-  if (user?.role === 'super_admin') return true;
+  if (user?.role === 'superAdmin') return true;
   router.navigate(['/login']);
   return false;
 };

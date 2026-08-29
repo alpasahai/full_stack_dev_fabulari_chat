@@ -9,15 +9,5 @@
     ],
     "channelIds": [],
     "status": "approved"
-  },
-  {
-    "id": "g1787991159555",
-    "name": "not-geec",
-    "adminId": "u1787967314837",
-    "memberIds": [
-      "u1787967314837"
-    ],
-    "channelIds": [],
-    "status": "pending"
   }
 ]

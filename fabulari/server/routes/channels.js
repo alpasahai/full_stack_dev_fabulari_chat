@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
     group.channelIds.push(new_channel.id);
     write_data('groups.json', groups);
   }
-  res.status(201).json(newChannel);
+  res.status(201).json(new_channel);
 });
 
 //Assigning users to a channel/room - lowkey use that interchangebalyyy

@@ -36,10 +36,10 @@ export class Dashboard implements OnInit {
   loadGroups() {
     this.groupService.getGroups().subscribe(groups => {
       this.myGroups = groups.filter(g =>
-        g.status === 'approved' && g.member_ids.includes(this.currentUser.id)
+        g.status === 'approved' && g.memberIds.includes(this.currentUser.id)
       );
       this.browseGroups = groups.filter(g =>
-        g.status === 'approved' && !g.member_ids.includes(this.currentUser.id)
+        g.status === 'approved' && !g.memberIds.includes(this.currentUser.id)
       );
     });
   }
