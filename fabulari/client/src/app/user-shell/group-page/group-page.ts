@@ -68,6 +68,7 @@ export class GroupPage implements OnInit {
     this.channelService.getChannels(groupId).subscribe(channels => {
       this.channels = channels;
       if (channels.length) this.selectedChannel = channels[0];
+      this.cdr.detectChanges(); // Force change detectio
     });
   }
 
