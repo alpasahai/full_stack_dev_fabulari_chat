@@ -23,6 +23,20 @@
         <input type="date" [(ngModel)]="dob" name="dob">
       </label>
 
+      <label>
+        Profile Picture
+      </label>
+        <button type="button" disabled>Upload PFP</button>
+
+        <h3>Chat Theme</h3>
+        <p>Select a colour for your chat background</p>
+        <div class="theme-options">
+          <button type="button" disabled class="theme-circle theme-1"></button>
+          <button type="button" disabled class="theme-circle theme-2"></button>
+          <button type="button" disabled class="theme-circle theme-3"></button>
+          <button type="button" disabled class="theme-circle theme-4"></button>
+        </div>
+
       <p class="error" *ngIf="error_message">{{ error_message }}</p>
 
       <button type="submit">Sign Up</button>
