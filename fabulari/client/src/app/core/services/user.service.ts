@@ -12,4 +12,8 @@ export class UserService {
   createUser(user: Partial<User> & { password: string; email?: string; dob?: string }) {
     return this.http.post<User>(this.apiUrl, user);
   }
+
+  getUsers() { return this.http.get<User[]>(this.apiUrl); }
+  getUser(id: string) { return this.http.get<User>(`${this.apiUrl}/${id}`); }
+  updateUser(id: string, data: Partial<User>) { return this.http.patch<User>(`${this.apiUrl}/${id}`, data); }
 }
