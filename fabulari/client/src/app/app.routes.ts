@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import { Login } from './auth/login/login';
 import { Signup } from './auth/signup/signup';
 import { Dashboard } from './user-shell/dashboard/dashboard';
+import { GroupPage } from './user-shell/group-page/group-page';
 import { ManageUsers } from './super-admin-shell/manage-users/manage-users';
 import { authGuard } from './core/guards/auth-guard';
 import { superAdminGuard } from './core/guards/super-admin-guard';
@@ -19,7 +20,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: Dashboard },
       //{ path: 'profile', component: ProfileComponent },   
-      //{ path: 'group/:id', component: GroupPageComponent },
+      { path: 'group/:id', component: GroupPage },
     ]
   },
 

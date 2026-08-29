@@ -1,6 +1,8 @@
 export interface User {
   id: string;
   username: string;
-  role: 'super_admin' | 'group_admin' | 'user';
-  group_ids: string[];
+  role: 'superAdmin' | 'groupAdmin' | 'user';
+  groupIds: string[];
+  email?: string;
+  dob?: string;
 }

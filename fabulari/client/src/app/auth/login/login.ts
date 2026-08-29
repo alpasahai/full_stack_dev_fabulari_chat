@@ -29,7 +29,7 @@ export class Login {
     this.auth.login(this.username, this.password).subscribe({
       next: (user) => {
         this.auth.saveSession(user);
-        if (user.role === 'super_admin') {
+        if (user.role === 'superAdmin') {
           this.router.navigate(['/superadmin/requests']);
         } else {
           this.router.navigate(['/app/dashboard']);
