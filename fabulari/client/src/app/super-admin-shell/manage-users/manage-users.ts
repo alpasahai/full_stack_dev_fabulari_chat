@@ -4,6 +4,8 @@ import { GroupService } from '../../core/services/group.service';
 import { AuthService } from '../../core/services/auth';
 import { Group } from '../../core/models/group.model';
 
+import { ChangeDetectorRef } from '@angular/core'; // Import ChangeDetectorRef
+
 //see if you can rename to requestsSA for better clarity
 
 @Component({
@@ -16,22 +18,29 @@ import { Group } from '../../core/models/group.model';
 export class ManageUsers implements OnInit {
   pendingGroups: Group[] = [];
 
-  constructor(private groupService: GroupService, private auth: AuthService) {}
+  constructor(private groupService: GroupService, private auth: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() { this.loadPending(); }
 
   loadPending() {
     this.groupService.getGroups().subscribe(groups => {
       this.pendingGroups = groups.filter(g => g.status === 'pending');
+      this.cdr.detectChanges(); // Force change detection
     });
   }
 
   approve(group: Group) {
-    this.groupService.updateStatus(group.id, 'approved').subscribe(() => this.loadPending());
+    this.groupService.updateStatus(group.id, 'approved').subscribe(() => {
+      this.loadPending();
+      this.cdr.detectChanges(); // Force change detection
+    });
   }
 
   deny(group: Group) {
-    this.groupService.updateStatus(group.id, 'declined').subscribe(() => this.loadPending());
+    this.groupService.updateStatus(group.id, 'declined').subscribe(() => {
+      this.loadPending();
+      this.cdr.detectChanges(); // Force change detection
+    });
   }
 
   logout() { this.auth.logout(); }

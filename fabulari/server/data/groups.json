@@ -7,7 +7,9 @@
       "u2",
       "u3"
     ],
-    "channelIds": [],
+    "channelIds": [
+      "c1788007521399"
+    ],
     "status": "approved"
   },
   {
@@ -29,6 +31,16 @@
       "u2"
     ],
     "channelIds": [],
-    "status": "pending"
+    "status": "approved"
+  },
+  {
+    "id": "g1788007413001",
+    "name": "geec-whack",
+    "adminId": "u2",
+    "memberIds": [
+      "u2"
+    ],
+    "channelIds": [],
+    "status": "declined"
   }
 ]
