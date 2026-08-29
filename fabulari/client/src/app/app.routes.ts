@@ -24,7 +24,7 @@ export const routes: Routes = [
     path: 'superadmin',
     canActivate: [authGuard, superAdminGuard],
     children: [
-      { path: 'users', component: ManageUsers },
+      { path: 'requests', component: ManageUsers }, //ManageUsers is where the requsts page is for the superadmin
     ]
   },
 

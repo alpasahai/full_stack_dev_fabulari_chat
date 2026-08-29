@@ -1,1 +1,21 @@
-<p>login works!</p>
+<div class="login-page">
+  <div class="login-card">
+    <h1>Login Page</h1>
+
+    <form (ngSubmit)="onSubmit()">
+      <label>
+        Username
+        <input type="text" [(ngModel)]="username" name="username" required autofocus>
+      </label>
+
+      <label>
+        Password
+        <input type="password" [(ngModel)]="password" name="password" required>
+      </label>
+
+      <p class="error" *ngIf="error_message">{{ error_message }}</p>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</div>

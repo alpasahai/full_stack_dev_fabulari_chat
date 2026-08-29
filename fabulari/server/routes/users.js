@@ -8,13 +8,28 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const users = read_data('users.json');
+
+  //checking for duplicate users:
+  const user_exists = users.find(u => u.username === req.body.username);
+  if (user_exists) {
+    return res.status(400).json({ message: 'Username already taken' });
+  }
+
+  //Creating a new user object
   const new_user = {
     id: 'u' + Date.now(),
-    ...req.body
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+    dob: req.body.dob || null,
+    role: 'user', //signup always creates a plain user
+    groupIds: []
   };
   users.push(new_user);
   write_data('users.json', users);
-  res.status(201).json(new_user);
+
+  const { password, ...safe_user } = new_user;
+  res.status(201).json(safe_user);
 });
 
 module.exports = router;
