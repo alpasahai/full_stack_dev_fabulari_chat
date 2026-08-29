@@ -23,14 +23,5 @@
     "groupIds": [
       "g1"
     ]
-  },
-  {
-    "id": "u1787967314837",
-    "username": "alpie",
-    "email": "alpie@test.com",
-    "password": "1234",
-    "dob": "2005-09-02",
-    "role": "user",
-    "groupIds": []
   }
 ]
