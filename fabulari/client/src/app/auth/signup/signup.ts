@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { UserService } from '../../core/services/user';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   imports: [CommonModule, FormsModule, RouterLink],
