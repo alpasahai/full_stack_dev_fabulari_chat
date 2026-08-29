@@ -1,10 +1,23 @@
 [
-    {
+  {
     "id": "g1",
     "name": "alpie-cats",
     "adminId": "u2",
-    "memberIds": ["u2", "u3"],
+    "memberIds": [
+      "u2",
+      "u3"
+    ],
     "channelIds": [],
     "status": "approved"
+  },
+  {
+    "id": "g1787991159555",
+    "name": "not-geec",
+    "adminId": "u1787967314837",
+    "memberIds": [
+      "u1787967314837"
+    ],
+    "channelIds": [],
+    "status": "pending"
   }
 ]
