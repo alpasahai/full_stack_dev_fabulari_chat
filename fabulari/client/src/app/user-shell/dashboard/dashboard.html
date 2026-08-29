@@ -1,1 +1,39 @@
-<p>dashboard works!</p>
+<div class="main-page">
+  <header>
+    <h1>MAIN PAGE</h1>
+    <div class="header-actions">
+      <button (click)="logout()">Sign Out</button>
+      <button class="avatar" (click)="goToProfile()">👤</button>
+    </div>
+  </header>
+
+  <div class="content">
+    <section class="my-groups">
+      <h2>My Groups</h2>
+      <div class="group-list">
+        <div class="group-item" *ngFor="let g of myGroups" (click)="openGroup(g)">
+          {{ g.name }}
+        </div>
+        <p class="empty" *ngIf="!myGroups.length">You're not in any groups yet.</p>
+      </div>
+    </section>
+
+    <section class="join-groups">
+      <h2>Join Groups</h2>
+
+      <div class="browse-list">
+        <div class="browse-item" *ngFor="let g of browseGroups">
+          <span>{{ g.name }}</span>
+          <button (click)="joinGroup(g)">Join</button>
+        </div>
+        <p class="empty" *ngIf="!browseGroups.length">No other groups to join right now.</p>
+      </div>
+
+      <div class="create-group">
+        <input type="text" [(ngModel)]="newGroupName" placeholder="New group name" name="newGroupName">
+        <button (click)="createGroup()">Create Group</button>
+      </div>
+      <p class="hint">New groups need Super Admin approval before they're visible.</p>
+    </section>
+  </div>
+</div>
