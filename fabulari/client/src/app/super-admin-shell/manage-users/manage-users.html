@@ -1,10 +1,10 @@
-<div class="manage-users-page">
-  <header>
+<div class="manage-users-page page-frame">
+  <header style="display: flex; justify-content: space-between; align-items: center;">
     <h1>SUPER ADMIN: GROUP CREATION REQUESTS</h1>
     <button (click)="logout()">Sign Out</button>
   </header>
 
-  <div class="manage-user-list">
+  <div class="manage-user-list card">
 
     <div class="manage-user-item" *ngFor="let g of pendingGroups">
       <div class="manage-user-desc">

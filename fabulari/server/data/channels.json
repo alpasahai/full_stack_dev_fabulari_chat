@@ -6,5 +6,22 @@
     "memberIds": [
       "u3"
     ]
+  },
+  {
+    "id": "c1788009668871",
+    "name": "room_another",
+    "groupId": "g2",
+    "memberIds": [
+      "u3"
+    ]
+  },
+  {
+    "id": "c1788010746382",
+    "name": "room-2",
+    "groupId": "g1",
+    "memberIds": [
+      "u2",
+      "u3"
+    ]
   }
 ]
