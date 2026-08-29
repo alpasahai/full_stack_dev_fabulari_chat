@@ -10,7 +10,7 @@
     "channelIds": [],
     "status": "approved"
   },
-    {
+  {
     "id": "g2",
     "name": "alpie-hates-geec",
     "adminId": "u2",
@@ -20,5 +20,15 @@
     ],
     "channelIds": [],
     "status": "approved"
+  },
+  {
+    "id": "g1788005909742",
+    "name": "geec-sux",
+    "adminId": "u2",
+    "memberIds": [
+      "u2"
+    ],
+    "channelIds": [],
+    "status": "pending"
   }
 ]

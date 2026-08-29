@@ -11,6 +11,9 @@ import { Group } from '../../core/models/group.model';
 import { Channel } from '../../core/models/channels.model';
 import { User } from '../../core/models/user.model';
 
+//SOMETHING TO TAKE ALPAS STRESS
+import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
   selector: 'app-group-page',
   standalone: true,
@@ -31,7 +34,7 @@ export class GroupPage implements OnInit {
 
   //Mock chats for now lol
   mockMessages = [
-    { username: 'alpaca-05', time: '12:45pm', text: 'hey team, welcome to the channel!' },
+    { username: 'tyra', time: '12:45pm', text: 'hey team, welcome to the channel!' },
     { username: 'ysa', time: '1:02pm', text: 'thanks! excited to be here' },
   ];
 
@@ -41,7 +44,9 @@ export class GroupPage implements OnInit {
     private groupService: GroupService,
     private channelService: ChannelService,
     private userService: UserService,
-    private auth: AuthService
+    private auth: AuthService,
+
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -53,6 +58,8 @@ export class GroupPage implements OnInit {
       this.is_GroupAdmin = this.group.adminId === this.currentUser.id;
       this.loadChannels(groupId);
       this.loadMembers();
+
+      this.cdr.detectChanges(); // Force change detectio
     });
   }
 
@@ -68,6 +75,7 @@ export class GroupPage implements OnInit {
   loadMembers() {
     this.userService.getUsers().subscribe(users => {
       this.members = users.filter(u => this.group.memberIds.includes(u.id));
+      this.cdr.detectChanges(); // Force change detectio
     });
   }
 
@@ -80,6 +88,7 @@ export class GroupPage implements OnInit {
     this.channelService.createChannel(this.newChannelName, this.group.id).subscribe(() => {
       this.newChannelName = '';
       this.loadChannels(this.group.id);
+      this.cdr.detectChanges(); // Force change detectio
     });
   }
 
@@ -88,6 +97,7 @@ export class GroupPage implements OnInit {
     this.channelService.addMember(this.selectedChannel.id, this.memberToAssign).subscribe(updated => {
       this.selectedChannel = updated;
       this.memberToAssign = '';
+      this.cdr.detectChanges(); // Force change detectio
     });
   }
 

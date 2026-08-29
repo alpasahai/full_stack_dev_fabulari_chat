@@ -1,0 +1,24 @@
+<div class="manage-users-page">
+  <header>
+    <h1>SUPER ADMIN: GROUP CREATION REQUESTS</h1>
+    <button (click)="logout()">Sign Out</button>
+  </header>
+
+  <div class="manage-user-list">
+
+    <div class="manage-user-item" *ngFor="let g of pendingGroups">
+      <div class="manage-user-desc">
+        <strong>{{ g.name }}</strong>
+        <span class="sub">requested by {{ g.adminId }}</span>
+      </div>
+
+      <div class="manage-user-actions">
+        <button class="approve" (click)="approve(g)">Approve</button>
+        <button class="deny" (click)="deny(g)">Deny</button>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="!pendingGroups.length">No pending group requests.</p>
+
+  </div>
+</div>
