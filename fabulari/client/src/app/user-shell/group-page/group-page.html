@@ -1,5 +1,5 @@
-<div class="group-page" *ngIf="group">
-  <aside class="rooms-panel">
+<div class="group-page page-frame" *ngIf="group">
+  <aside class="rooms-panel card" style="display: flex; flex-direction: column; gap: 20px;">
     <div class="rooms-header">
       <button class="return" (click)="goBack()">← Return</button>
       <h2>Groups Page</h2>
@@ -12,13 +12,13 @@
     </div>
     <p class="empty" *ngIf="!channels.length">No rooms yet.</p>
 
-    <div class="ga-only" *ngIf="is_GroupAdmin">
+    <div class="ga-only" *ngIf="is_GroupAdmin" style="flex: column; gap: 60px; align-items: center;">
       <input type="text" [(ngModel)]="newChannelName" placeholder="New room name" name="newChannelName">
       <button (click)="createChannel()">Add Room</button>
     </div>
   </aside>
 
-  <main class="chat-panel">
+  <main class="chat-panel card">
     <div class="chat-header" *ngIf="selectedChannel">{{ selectedChannel.name }}</div>
 
     <div class="messages">
@@ -28,20 +28,20 @@
       </div>
     </div>
 
-    <div class="chat-input">
+    <div class="chat-input" style="display: flex; gap: 10px; align-items: center;">
       <input type="text" placeholder="Type a message... ((ITS FAKE for now))" disabled>
       <button disabled>↑</button>
     </div>
   </main>
 
-  <aside class="members-panel">
+  <aside class="members-panel card">
     <h3>Members</h3>
     <div class="member-item" *ngFor="let m of members">
       {{ m.username }} <span class="role-tag" *ngIf="m.id === group.adminId">GA</span>
     </div>
 
     <div class="ga-only assign-box" *ngIf="is_GroupAdmin && selectedChannel">
-      <label>Assign member to {{ selectedChannel.name }}</label>
+      <label style="font-weight: bold;">Assign member to {{ selectedChannel.name }}</label>
       <select [(ngModel)]="memberToAssign" name="memberToAssign">
         <option value="" disabled selected>Choose member</option>
         <option *ngFor="let m of members" [value]="m.id">{{ m.username }}</option>
@@ -49,7 +49,7 @@
       <button (click)="assignMember()">Assign</button>
 
       <div class="assigned-list" *ngIf="selectedChannel.memberIds.length">
-        <p class="assigned-title">In this room:</p>
+        <p class="assigned-title" style="font-weight: bold;">In this room:</p>
         <span class="assigned-tag" *ngFor="let uid of selectedChannel.memberIds">{{ memberName(uid) }}</span>
       </div>
     </div>

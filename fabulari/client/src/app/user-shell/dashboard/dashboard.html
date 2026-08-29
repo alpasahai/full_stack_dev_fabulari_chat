@@ -1,16 +1,16 @@
 <!--<p>DEBUG length: {{ myGroups.length }}</p>-->
 
-<div class="main-page">
-  <header>
+<div class="main-page page-frame">
+  <header style="display: flex; justify-content: space-between; align-items: center;">
     <h1>MAIN PAGE</h1>
-    <div class="header-actions">
+    <div class="header-actions" style="display: flex; gap: 30px; align-items: center;">
       <button (click)="logout()">Sign Out</button>
-      <button class="avatar" (click)="goToProfile()">👤</button>
+      <button class="avatar" (click)="goToProfile()">Profile</button>
     </div>
   </header>
 
   <div class="content">
-    <section class="my-groups">
+    <section class="my-groups card">
       <h2>My Groups</h2>
       <div class="group-list">
         <div class="group-item" *ngFor="let g of myGroups" (click)="openGroup(g)">
@@ -26,7 +26,7 @@
       </div> -->
     </section>
 
-    <section class="join-groups">
+    <section class="join-groups card">
       <h2>Join Groups</h2>
 
       <div class="browse-list">
@@ -37,7 +37,7 @@
         <p class="empty" *ngIf="!browseGroups.length">No other groups to join right now.</p>
       </div>
 
-      <div class="create-group">
+      <div class="create-group" style="display: flex; gap: 30px; align-items: center;">
         <input type="text" [(ngModel)]="newGroupName" placeholder="New group name" name="newGroupName">
         <button (click)="createGroup()">Create Group</button>
       </div>

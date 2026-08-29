@@ -8,7 +8,8 @@
       "u3"
     ],
     "channelIds": [
-      "c1788007521399"
+      "c1788007521399",
+      "c1788010746382"
     ],
     "status": "approved"
   },
@@ -20,7 +21,9 @@
       "u2",
       "u3"
     ],
-    "channelIds": [],
+    "channelIds": [
+      "c1788009668871"
+    ],
     "status": "approved"
   },
   {

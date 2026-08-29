@@ -1,1 +1,103 @@
-/* You can add global styles to this file, and also import other style files */
+/*All the blobs at the back look the same - so global this*/
+:root {
+  --color-yellow: #f4c542;
+  --color-red: #e0524a;
+  --color-blue: #4a90d9;
+  --color-ink: #1a1a1a;
+  --color-card-bg: #ffffff;
+  --radius: 14px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #fafaf7;
+}
+
+// shared decorative background — reused across every "screen" page
+.page-frame {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 2rem;
+  background: radial-gradient(circle at 50% 40%, var(--color-yellow) 0%, transparent 45%), #fafaf7;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    //filter: blur(0px);
+    opacity: 0.8;
+    z-index: 0;
+  }
+
+  // red scribble blob, top-right-ish
+  &::before {
+    top: -60px;
+    right: -60px;
+    background: radial-gradient(circle, var(--color-red) 0%, transparent 70%);
+  }
+
+  // blue scribble blob, opposite corner
+  &::after {
+    bottom: -60px;
+    left: -60px;
+    background: radial-gradient(circle, var(--color-blue) 0%, transparent 70%);
+  }
+}
+
+// content sits above the blobs
+.page-frame > * {
+  position: relative;
+  z-index: 1;
+}
+
+// reusable card look for every "boxed" section (login, group panels, profile, requests)
+.card {
+  background: var(--color-card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+}
+
+// reusable button styles so you're not rewriting these per page
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:not(.secondary):not(.deny) {
+  background: var(--color-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.88; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+button.secondary {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+}
+
+button.deny {
+  background: var(--color-red);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+}
