@@ -9,6 +9,7 @@
   {
     "id": "u2",
     "username": "tyra",
+    "email": "tyra@test.com",
     "password": "password123",
     "role": "groupAdmin",
     "groupIds": [
