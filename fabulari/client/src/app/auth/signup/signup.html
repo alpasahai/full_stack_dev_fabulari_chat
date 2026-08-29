@@ -1,1 +1,33 @@
-<p>signup works!</p>
+<div class="signup-page">
+  <div class="signup-card">
+    <h1>SIGN UP</h1>
+
+    <form (ngSubmit)="onSubmit()">
+      <label>
+        Username
+        <input type="text" [(ngModel)]="username" name="username" required>
+      </label>
+
+      <label>
+        Email
+        <input type="email" [(ngModel)]="email" name="email" required>
+      </label>
+
+      <label>
+        Password
+        <input type="password" [(ngModel)]="password" name="password" required minlength="6">
+      </label>
+
+      <label>
+        Date of Birth
+        <input type="date" [(ngModel)]="dob" name="dob">
+      </label>
+
+      <p class="error" *ngIf="error_message">{{ error_message }}</p>
+
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <a routerLink="/login" class="back-link">Been here before? Login!</a>
+  </div>
+</div>
