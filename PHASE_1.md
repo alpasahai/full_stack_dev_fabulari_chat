@@ -107,17 +107,20 @@ Commits follow a structure to ensure it's identifiable what Phase it belongs to 
 
 ## Data Structures used in Fabulari: 
 The following tables showcase the data structures that will be used for the Fabuari application: 
+
+Quick note: A few of these names have been changed in code due to an error in naming conventions namely a switch from snake_case to CamelCase. This will be tidied up further in Phase 2. 
+
 ### User
 | Field | Type | Description |
 |-------|------|--------------|
 | `id` | ObjectId | Unique identifier |
 | `username` | String | Display name / login handle |
 | `email` | String | Contact email, used at signup |
-| `password_hash` | String | Hashed password (never stored plaintext) |
+| `passwordHash` | String | Hashed password (never stored plaintext) |
 | `dob` | Date | Used to enforce age limits on group joining |
-| `pfp_url` | String | Path/URL to uploaded profile picture |
+| `pfpUrl` | String | Path/URL to uploaded profile picture |
 | `theme` | String (enum: `light`, `dark`, `colour`) | User's selected UI theme |
-| `system_role` | String (enum: `standard`, `super_admin`) | Global permission level |
+| `role` | String (enum: `user`,`groupAdmin`, `superAdmin`) | Global permission level |
 | `favourite_groups` | Array<ObjectId> | Groups starred by the user |
 | `is_banned` | Boolean | System-level ban flag (Super Admin action) |
 | `banned_from_groups` | Array<ObjectId> | Group-level bans (separate from system ban) |
@@ -130,9 +133,9 @@ The following tables showcase the data structures that will be used for the Fabu
 | `description` | String | Shown on group creation/manage modal |
 | `age_limit` | Number | Minimum age to join, set at creation |
 | `theme` | String | Group's visual theme |
-| `admin_ids` | Array<ObjectId> | Users with Group Admin permissions for this group |
-| `member_ids` | Array<ObjectId> | All members of the group |
-| `room_ids` | Array<ObjectId> | Rooms belonging to this group |
+| `adminIds` | Array<ObjectId> | Users with Group Admin permissions for this group |
+| `memberIds` | Array<ObjectId> | All members of the group |
+| `roomIds` | Array<ObjectId> | Rooms belonging to this group |
 | `status` | String (enum: `pending`, `approved`, `rejected`) | Super Admin approval state |
 | `rejection_reason` | String | Populated if `status` is `rejected` |
 
@@ -140,15 +143,15 @@ The following tables showcase the data structures that will be used for the Fabu
 | Field | Type | Description |
 |-------|------|--------------|
 | `id` | ObjectId | Unique identifier |
-| `group_id` | ObjectId | Parent group reference |
+| `groupId` | ObjectId | Parent group reference |
 | `name` | String | Room name, set on creation |
 
 ### Message
 | Field | Type | Description |
 |-------|------|--------------|
 | `id` | ObjectId | Unique identifier |
-| `room_id` | ObjectId | Room the message belongs to |
-| `sender_id` | ObjectId | Reference to sending User |
+| `roomId` | ObjectId | Room the message belongs to |
+| `senderId` | ObjectId | Reference to sending User |
 | `text` | String | Message content |
 | `time_stamp` | Date | Sent time, shown in chat window |
 
@@ -167,8 +170,8 @@ The following tables showcase the data structures that will be used for the Fabu
 | Field | Type | Description |
 |-------|------|--------------|
 | `id` | ObjectId | Unique identifier |
-| `group_id` | ObjectId | Group being requested to join |
-| `user_id` | ObjectId | Requesting user |
+| `groupId` | ObjectId | Group being requested to join |
+| `userId` | ObjectId | Requesting user |
 | `status` | String (enum: `pending`, `approved`, `rejected`) | Group Admin decision |
 
 ### ReportRequest (Ban/Removal)
@@ -197,36 +200,36 @@ For the angualar architecture of Fabulari, it has been structured to better suit
 - `/` — Opening screen
 - `/login` — Login screen
 - `/signup` — Sign up screen
-- `/app/main` — Main page (My Groups + Join Groups)
+- `/app/dashboard` — Main page 
 - `/app/profile` — Profile screen
 - `/app/group/:groupId` — Group page (rooms + chat + members)
 - `/app/group/:groupId/requests` — Group Admin join-request queue (route-guarded, Group Admin only)
-- `/superadmin/requests` — Super Admin request queue + audit log
+- `/superadmin/manage-users` — Super Admin request queue + audit log
 
 The `/superadmin` route is deliberately isolated as its own lazy-loaded module with no shared layout with `/app`, reflecting that the Super Admin workflow never overlaps with User/Group Admin navigation.
 
 ### Components
 | Component | Role |
 |-----------|------|
-| `OpeningScreenComponent` | Landing screen, links to login/signup |
-| `LoginComponent` | Username/password auth form |
-| `SignupComponent` | Registration form incl. DOB check, pfp upload, theme selection |
-| `MainPageComponent` | Hosts My Groups + Join Groups sections |
-| `MyGroupsListComponent` | Displays favourites, admin groups, full group list |
-| `JoinGroupsComponent` | Browse groups, view own join requests + status |
-| `ProfileComponent` | View/edit profile, delete account |
-| `GroupPageComponent` | Container for rooms sidebar, chat window, members sidebar |
-| `RoomsSidebarComponent` | Lists rooms, create/manage room actions |
-| `ChatWindowComponent` | Displays messages for active room, message input |
-| `MembersSidebarComponent` | Lists group members, edit/report actions |
-| `GroupAdminRequestsComponent` | Group Admin's join-request approval queue |
-| `SuperAdminRequestsComponent` | Super Admin's group-creation + ban/removal queues |
-| `AuditLogComponent` | Read-only log of Super Admin actions |
-| `GroupCreationModalComponent` | Modal for submitting a new group request |
-| `ManageGroupModalComponent` | Edit/delete group (Group Admin) |
-| `NewRoomModalComponent` | Create a new room within a group |
-| `ReportModalComponent` | Submit a report/ban request on a member |
-| `MessageModalComponent` | Generic confirmation/rejection message popup |
+| `OpeningScreen` | Landing screen, links to login/signup |
+| `Login` | Username/password auth form |
+| `Signup` | Registration form incl. DOB check, pfp upload, theme selection |
+| `MainPage` | Hosts My Groups + Join Groups sections |
+| `MyGroupsList` | Displays favourites, admin groups, full group list |
+| `JoinGroups` | Browse groups, view own join requests + status |
+| `Profile=` | View/edit profile, delete account |
+| `GroupPage` | Container for rooms sidebar, chat window, members sidebar |
+| `ChannelSidebar` | Lists rooms, create/manage room actions |
+| `ChatWindow` | Displays messages for active room, message input |
+| `MembersSidebar` | Lists group members, edit/report actions |
+| `GroupAdminRequests` | Group Admin's join-request approval queue |
+| `ManageUsers` | Super Admin's group-creation + ban/removal queues - to be renamed |
+| `AuditLog` | Read-only log of Super Admin actions |
+| `GroupCreationModal` | Modal for submitting a new group request |
+| `ManageGroupModal` | Edit/delete group (Group Admin) |
+| `NewChannelModal` | Create a new room within a group |
+| `ReportModal` | Submit a report/ban request on a member |
+| `MessageModal` | Generic confirmation/rejection message popup |
 
 ### Services
 | Service | Role |
@@ -234,13 +237,13 @@ The `/superadmin` route is deliberately isolated as its own lazy-loaded module w
 | `AuthService` | Login/logout/signup, stores current user, exposes permission checks |
 | `SocketService` | Wraps Socket.IO client for real-time messaging |
 | `GroupService` | CRUD + favourite/join calls for groups |
-| `RoomService` | CRUD calls for rooms |
-| `RequestService` | Handles group creation, join, and report requests |
+| `ChannelService` | CRUD calls for rooms |
+| `ManageUser` | Handles group creation, join, and report requests - to be renamed |
 | `UserService` | Profile fetch/update/delete |
 | `AuditLogService` | Fetches Super Admin audit log entries |
 
 ### Models
-`User`, `Group`, `Room`, `Message`, `GroupCreationRequest`, `JoinRequest`, `ReportRequest`, `AuditLogEntry` — TypeScript interfaces mirroring the backend schemas above.
+`User`, `Group`, `Channel`, `Message`, `GroupCreationRequest`, `JoinRequest`, `ReportRequest`, `AuditLogEntry` — TypeScript interfaces mirroring the backend schemas above.
 
 ## Proposed Server Endpoints: 
 | Method | Route | Params/Body | Returns | Description |
