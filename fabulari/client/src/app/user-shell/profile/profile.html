@@ -1,1 +1,27 @@
-<p>profile works!</p>
+<div class="profile-page">
+  <div class="profile-card">
+    <button class="return" (click)="goBack()">← Return</button>
+    <h1>PROFILE</h1>
+
+    <label>
+      Username
+      <input type="text" [(ngModel)]="editUsername" name="editUsername" [disabled]="!editing">
+    </label>
+
+    <label>
+      Email
+      <input type="email" [(ngModel)]="editEmail" name="editEmail" [disabled]="!editing">
+    </label>
+
+    <div class="actions" *ngIf="!editing">
+      <button (click)="startEdit()">Edit</button>
+    </div>
+
+    <div class="actions" *ngIf="editing">
+      <button (click)="cancelEdit()" class="secondary">Cancel</button>
+      <button (click)="save()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!--Skipped a few feature like theme and PFP for Phase 2-->
