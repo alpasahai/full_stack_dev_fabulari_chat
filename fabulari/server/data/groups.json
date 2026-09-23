@@ -9,7 +9,8 @@
     ],
     "channelIds": [
       "c1788007521399",
-      "c1788010746382"
+      "c1788010746382",
+      "c1788039057370"
     ],
     "status": "approved"
   },
@@ -45,5 +46,17 @@
     ],
     "channelIds": [],
     "status": "declined"
+  },
+  {
+    "id": "g1788328057191",
+    "name": "test_group",
+    "adminId": "u1788328024046",
+    "memberIds": [
+      "u1788328024046"
+    ],
+    "channelIds": [
+      "c1788328097117"
+    ],
+    "status": "approved"
   }
 ]
