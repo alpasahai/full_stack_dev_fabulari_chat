@@ -24,5 +24,14 @@
     "groupIds": [
       "g1"
     ]
+  },
+  {
+    "id": "u1788328024046",
+    "username": "test",
+    "email": "test@test.com",
+    "password": "1234123",
+    "dob": "2022-04-14",
+    "role": "user",
+    "groupIds": []
   }
 ]
