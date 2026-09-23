@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,91 +22,106 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrl: './group-page.scss',
 })
 export class GroupPage implements OnInit {
-  group!: Group;
-  channels: Channel[] = [];
-  members: User[] = [];
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private groupService = inject(GroupService);
+  private channelService = inject(ChannelService);
+  private userService = inject(UserService);
+  private auth = inject(AuthService);
+ 
+  group = signal<Group | null>(null);
+  channels = signal<Channel[]>([]);
+  members = signal<User[]>([]);
+  pendingRequesters = signal<User[]>([]); // users awaiting this GA's approval to join
   currentUser!: User;
   is_GroupAdmin = false;
-
-  selectedChannel: Channel | null = null;
+ 
+  selectedChannel = signal<Channel | null>(null);
   newChannelName = '';
   memberToAssign = '';
-
+ 
   //Mock chats for now lol
   mockMessages = [
     { username: 'tyra', time: '12:45pm', text: 'hey team, welcome to the channel!' },
     { username: 'ysa', time: '1:02pm', text: 'thanks! excited to be here' },
   ];
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private groupService: GroupService,
-    private channelService: ChannelService,
-    private userService: UserService,
-    private auth: AuthService,
-
-    private cdr: ChangeDetectorRef,
-  ) {}
-
+ 
   ngOnInit() {
     this.currentUser = this.auth.getCurrentUser()!;
     const groupId = this.route.snapshot.paramMap.get('id')!;
-
+ 
     this.groupService.getGroups().subscribe(groups => {
-      this.group = groups.find(g => g.id === groupId)!;
-      this.is_GroupAdmin = this.group.adminId === this.currentUser.id;
+      const found = groups.find(g => g.id === groupId)!;
+      this.group.set(found);
+      this.is_GroupAdmin = found.adminId === this.currentUser.id;
       this.loadChannels(groupId);
       this.loadMembers();
-
-      this.cdr.detectChanges(); // Force change detectio
     });
   }
-
+ 
   //Getting the channels ready
   loadChannels(groupId: string) {
     this.channelService.getChannels(groupId).subscribe(channels => {
-      this.channels = channels;
-      if (channels.length) this.selectedChannel = channels[0];
-      this.cdr.detectChanges(); // Force change detectio
+      this.channels.set(channels);
+      if (channels.length) this.selectedChannel.set(channels[0]);
     });
   }
-
-  //Loading the Memebers that are in the room
+ 
+  //Loading the Members that are in the room, plus anyone waiting on approval
   loadMembers() {
     this.userService.getUsers().subscribe(users => {
-      this.members = users.filter(u => this.group.memberIds.includes(u.id));
-      this.cdr.detectChanges(); // Force change detectio
+      const g = this.group();
+      this.members.set(g ? users.filter(u => g.memberIds.includes(u.id)) : []);
+      this.pendingRequesters.set(g ? users.filter(u => g.pendingMemberIds?.includes(u.id)) : []);
     });
   }
-
+ 
+  approveJoinRequest(userId: string) {
+    const g = this.group();
+    if (!g) return;
+    this.groupService.respondToJoinRequest(g.id, userId, 'approve').subscribe(updated => {
+      this.group.set(updated);
+      this.loadMembers();
+    });
+  }
+ 
+  declineJoinRequest(userId: string) {
+    const g = this.group();
+    if (!g) return;
+    this.groupService.respondToJoinRequest(g.id, userId, 'decline').subscribe(updated => {
+      this.group.set(updated);
+      this.loadMembers();
+    });
+  }
+ 
   selectChannel(channel: Channel) {
-    this.selectedChannel = channel;
+    this.selectedChannel.set(channel);
   }
-
+ 
   createChannel() {
-    if (!this.newChannelName.trim()) return;
-    this.channelService.createChannel(this.newChannelName, this.group.id).subscribe(() => {
+    const g = this.group();
+    if (!this.newChannelName.trim() || !g) return;
+    this.channelService.createChannel(this.newChannelName, g.id).subscribe(() => {
       this.newChannelName = '';
-      this.loadChannels(this.group.id);
-      this.cdr.detectChanges(); // Force change detectio
+      this.loadChannels(g.id);
     });
   }
-
+ 
   assignMember() {
-    if (!this.memberToAssign || !this.selectedChannel) return;
-    this.channelService.addMember(this.selectedChannel.id, this.memberToAssign).subscribe(updated => {
-      this.selectedChannel = updated;
+    const sel = this.selectedChannel();
+    if (!this.memberToAssign || !sel) return;
+    this.channelService.addMember(sel.id, this.memberToAssign).subscribe(updated => {
+      this.selectedChannel.set(updated);
       this.memberToAssign = '';
-      this.cdr.detectChanges(); // Force change detectio
     });
   }
-
+ 
   memberName(id: string): string {
-    return this.members.find(m => m.id === id)?.username || id;
+    return this.members().find(m => m.id === id)?.username || id;
   }
-
+ 
   goBack() {
     this.router.navigate(['/app/dashboard']);
   }
 }
+ 

@@ -1,47 +1,77 @@
-<div class="signup-page">
-  <div class="signup-card">
+<div class="signup-page page-frame">
+  <div class="signup-card card">
     <h1>SIGN UP</h1>
 
     <form #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
       <label>
         Username
-        <input type="text" [(ngModel)]="username" name="username" required>
+        <input type="text" [(ngModel)]="username" name="username" #usernameField="ngModel"
+               required minlength="3" [disabled]="formBusy()">
       </label>
+      <p class="field-error" *ngIf="usernameField.invalid && usernameField.touched">
+        <span *ngIf="usernameField.errors?.['required']">Username is required.</span>
+        <span *ngIf="usernameField.errors?.['minlength']">Username must be at least 3 characters.</span>
+      </p>
 
       <label>
         Email
-        <input type="email" [(ngModel)]="email" name="email" required>
+        <input type="email" [(ngModel)]="email" name="email" #emailField="ngModel"
+               required email [disabled]="formBusy()">
       </label>
+      <p class="field-error" *ngIf="emailField.invalid && emailField.touched">
+        <span *ngIf="emailField.errors?.['required']">Email is required.</span>
+        <span *ngIf="emailField.errors?.['email']">Enter a valid email address.</span>
+      </p>
 
       <label>
         Password
-        <input type="password" [(ngModel)]="password" name="password" required minlength="6">
+        <input type="password" [(ngModel)]="password" name="password" #passwordField="ngModel"
+               required minlength="6" [disabled]="formBusy()">
       </label>
+      <p class="field-error" *ngIf="passwordField.invalid && passwordField.touched">
+        <span *ngIf="passwordField.errors?.['required']">Password is required.</span>
+        <span *ngIf="passwordField.errors?.['minlength']">Password must be at least 6 characters.</span>
+      </p>
 
       <label>
         Date of Birth
-        <input type="date" [(ngModel)]="dob" name="dob">
+        <input type="date" [(ngModel)]="dob" name="dob" #dobField="ngModel"
+               required [disabled]="formBusy()">
       </label>
+      <p class="field-error" *ngIf="dobField.invalid && dobField.touched">
+        <span *ngIf="dobField.errors?.['required']">Date of birth is required.</span>
+      </p>
 
-      <label>
-        Profile Picture
-      </label>
-        <button type="button" disabled>Upload PFP</button>
+      <label>Profile Picture</label>
+      <div class="avatar-picker">
+        <img *ngIf="avatarPreview()" [src]="avatarPreview()" alt="Avatar preview" class="avatar-preview">
+        <input type="file" accept="image/*" (change)="onAvatarSelected($event)" [disabled]="formBusy()">
+        <span *ngIf="avatarUploading()" class="uploading-hint">Uploading…</span>
+      </div>
+      <p class="field-error" *ngIf="avatarError()">{{ avatarError() }}</p>
 
-        <h3>Chat Theme</h3>
-        <p>Select a colour for your chat background</p>
-        <div class="theme-options">
-          <button type="button" disabled class="theme-circle theme-1"></button>
-          <button type="button" disabled class="theme-circle theme-2"></button>
-          <button type="button" disabled class="theme-circle theme-3"></button>
-          <button type="button" disabled class="theme-circle theme-4"></button>
-        </div>
+      <h3>Chat Theme</h3>
+      <p>Select a colour for your chat background</p>
+      <div class="theme-options">
+        <button type="button"
+                *ngFor="let theme of THEMES"
+                class="theme-circle"
+                [style.background]="theme.hex"
+                [class.selected]="selectedTheme() === theme.id"
+                [attr.aria-label]="theme.label"
+                [disabled]="formBusy()"
+                (click)="selectTheme(theme.id)">
+        </button>
+      </div>
 
       <p class="error" *ngIf="error_message">{{ error_message }}</p>
 
-      <button type="submit" [disabled]="signupForm.invalid">Sign Up</button>
+      <button type="submit" [disabled]="signupForm.invalid || formBusy()">
+        {{ submitting() ? 'Signing up…' : 'Sign Up' }}
+      </button>
     </form>
 
     <a routerLink="/login" class="back-link">Been here before? Login!</a>
   </div>
 </div>
+
